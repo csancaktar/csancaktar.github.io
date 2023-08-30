@@ -1,34 +1,20 @@
-"Adams":
-  - firstname: ["Edwin", "E.", "E. P.", "Edwin Plimpton"]
-    url: https://en.wikipedia.org/wiki/Edwin_Plimpton_Adams
+"Martius":
+  - firstname: ["Georg", "G.", "G. M.", "Georg Martius"]
+    url: https://scholar.google.de/citations?user=b-JF-UIAAAAJ&hl=en
 
-"Podolsky":
-  - firstname: ["Boris", "B.", "B. Y.", "Boris Yakovlevich"]
-    url: https://en.wikipedia.org/wiki/Boris_Podolsky
+"Blaes":
+  - firstname: ["Sebastian", "S.", "S. B.", "Sebastian Blaes"]
+    url: https://scholar.google.de/citations?user=ftV9OHMAAAAJ&hl=en
 
-"Rosen":
-  - firstname: ["Nathan", "N."]
-    url: https://en.wikipedia.org/wiki/Nathan_Rosen
+"Piater":
+  - firstname: ["Justus", "J.", "J. P.", "Justus Piater"]
+    url: https://scholar.google.at/citations?user=meJCYXAAAAAJ&hl=de
 
-"Bach": 
-  - firstname: ["Johann Sebastian", "J. S."]
-    url: https://en.wikipedia.org/wiki/Johann_Sebastian_Bach
+"Lanillos":
+  - firstname: ["Pablo", "P.", "P. L.", "Pablo Lanillos"]
+    url: https://scholar.google.at/citations?user=SUdmeIgAAAAJ&hl=de&oi=ao
 
-  - firstname: ["Carl Philipp Emanuel", "C. P. E."]
-    url: https://en.wikipedia.org/wiki/Carl_Philipp_Emanuel_Bach
+"Gerven":
+  - firstname: ["Marcel A. J.", "M. A. J.", "M. A. J. G.", "Marcel A. J. Gerven"]
+    url: https://scholar.google.com/citations?user=sX0ZypwAAAAJ&hl=en
 
-"Przibram":
-  - firstname: ["Karl"]
-    url: https://link.springer.com/article/10.1007/s00016-019-00242-z
-
-"Schrödinger":
-  - firstname: ["Erwin"]
-    url: https://en.wikipedia.org/wiki/Erwin_Schr%C3%B6dinger
-
-"Lorentz":
-  - firstname: ["Hendrik Antoon"]
-    url: https://en.wikipedia.org/wiki/Hendrik_Lorentz
-
-"Planck":
-  - firstname: ["Max"]
-    url: https://en.wikipedia.org/wiki/Max_Planck

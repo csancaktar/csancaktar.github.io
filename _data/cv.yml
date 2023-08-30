@@ -2,18 +2,18 @@
   type: map
   contents:
     - name: Full Name
-      value: Albert Einstein
+      value: Cansu Sancaktar
     - name: Date of Birth
-      value: 14th March 1879
+      value: 31st January 1997
     - name: Languages
-      value: English, German
+      value: English, German, Turkish, Korean
 
 - title: Education
   type: time_table
   contents:
     - title: PhD
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1905
+      institution: Max Planck Institute for Intelligent Systems, Tübingen, Germany
+      year: April 2021 - 
       description:
         - Description 1.
         - Description 2.
