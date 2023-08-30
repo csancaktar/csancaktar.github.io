@@ -10,10 +10,10 @@ nav_order: 5
 I grew up by the sea and developed a deep passion for the sea and swimming 🌊🏊‍♀️⚓️. 
 <!-- Bodrum, Turkey is one of my favorite places in the world.  -->
 <p float="left">
-  <img src="../assets/img/sea/IMG_0002.jpg" height="200" />
+  <img src="../assets/img/sea/IMG_0002.png" height="200" />
   <img src="../assets/img/sea/IMG_6825.gif" height="200" />
   <img src="../assets/img/sea/IMG_6685.png" height="200"/>
-  <img src="../assets/img/sea/IMG_2302.jpg" height="200" />
+  <img src="../assets/img/sea/IMG_2302.png" height="200" />
   <img src="../assets/img/sea/IMG_6804.png" height="200" />
   <!-- <img src="../assets/img/sea/IMG_6781.png" height="250" /> -->
   <!-- <img src="../assets/img/sea/IMG_6746.png" height="250"/> -->
