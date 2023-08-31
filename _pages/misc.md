@@ -215,9 +215,9 @@ I enjoy writing down quotes from books, articles and interviews I read that reso
 I grew up by the sea and developed a deep passion for the sea and swimming 🌊🏊‍♀️⚓️. 
 <!-- Bodrum, Turkey is one of my favorite places in the world.  -->
 <p float="left">
-  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_0002.png" height="190">
-  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6825.gif" height="190">
-  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6685.png" height="190">
-  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_2302.png" height="190">
-  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6804.png" height="190">
+  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_0002.png" height="195">
+  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6825.gif" height="195">
+  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6685.png" height="195">
+  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_2302.png" height="195">
+  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6804.png" height="195">
 </p>
