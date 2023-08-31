@@ -152,7 +152,7 @@ I enjoy writing down quotes from books, articles and interviews I read that reso
     </div>
   </section>
 
-  <section class="vh-100" style="background-color: #7eabf5;">
+  <section class="vh-125" style="background-color: #7eabf5;">
     <div class="container py-5 h-50">
       <div class="row justify-content-center h-25">
         <div class="col col-lg-10">
@@ -215,9 +215,9 @@ I enjoy writing down quotes from books, articles and interviews I read that reso
 I grew up by the sea and developed a deep passion for the sea and swimming 🌊🏊‍♀️⚓️. 
 <!-- Bodrum, Turkey is one of my favorite places in the world.  -->
 <p float="left">
-  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_0002.png" height="200">
-  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6825.gif" height="200">
-  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6685.png" height="200">
-  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_2302.png" height="200">
-  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6804.png" height="200">
+  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_0002.png" height="190">
+  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6825.gif" height="190">
+  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6685.png" height="190">
+  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_2302.png" height="190">
+  <img src="../assets/img/blank.png" alt="" data-echo="../assets/img/sea/IMG_6804.png" height="190">
 </p>
