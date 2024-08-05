@@ -4,6 +4,6 @@ permalink: /cv/
 title: cv
 nav: true
 nav_order: 4
-cv_pdf: cansu_sancaktar_resume.pdf
+cv_pdf: csancaktar-resume2024.pdf
 description: 
 ---

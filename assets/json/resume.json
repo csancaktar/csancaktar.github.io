@@ -46,8 +46,16 @@
   ],
   "work": [
     {
-      "name": "Intel Deutschland GmbH, Munich",
-      "position": "Internship",
+      "name": "Qualcomm AI, Amsterdam",
+      "position": "Research Internship",
+      "startDate": "July 2024",
+      "endDate": "Nov 2024",
+      "summary": "Robotics Team.",
+      "highlights": []
+    },
+    {
+      "name": "Intel, Munich",
+      "position": "Research Engineering Internship",
       "startDate": "Apr 2017 & <br> Sep",
       "endDate": "Oct 2017",
       "summary": "Computational Cost Estimation of Machine Learning Algorithms for LTE Modem Power Optimization.",
@@ -56,6 +64,11 @@
   ],
   "volunteer": [],
   "awards": [
+    {
+      "title": "MPI-IS Outstanding Female Doctoral Student Prize: Honorable Mention.",
+      "startDate": "2024",
+      "endDate": "2024"
+    },
     {
       "title": "Scholarship holder of the Max Weber-Program",
       "startDate": "2017",
@@ -74,7 +87,7 @@
   "professional activities": [
     {
       "title": "Co-organizer of the upcoming workshop Intrinsically Motivated Open-ended Learning (IMOL) at NeurIPS 2023",
-      "date": "2023",
+      "date": "2023 & 2024",
       "url": "https://imol-workshop.github.io"
     },
     {
