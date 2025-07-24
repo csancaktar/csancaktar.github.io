@@ -2,7 +2,8 @@
 layout: about
 title: about
 permalink: /
-subtitle: Researching Curiosity in Artificial Agents 🤖  <br> Currently based in Tübingen, Germany
+subtitle: Researching Curiosity in Artificial Agents 🤖  <br> Currently in Paris, interning at Meta FAIR
+#Currently based in Tübingen, Germany
 
 
 profile:
@@ -20,7 +21,7 @@ social: true  # includes social icons at the bottom of the page
 
 I'm a PhD student at the Max Planck Institute for Intelligent Systems, supervised by [Prof. Georg Martius](https://scholar.google.de/citations?user=b-JF-UIAAAAJ&hl=de). My research focuses on curiosity and intrinsically-motivated Reinforcement Learning (RL). 
 
-Taking inspiration from developmental psychology, I'm developing methods to help robots explore their environment efficiently without extrinsic rewards, similar to how children perform free play.
+Taking inspiration from developmental psychology, I'm developing methods to help agents explore their environment efficiently without extrinsic rewards, similar to how children perform free play.
 
 Before starting my PhD, I completed my Bachelor's and Master's degrees in Electrical Engineering and Information Technology at [TU Munich](https://www.tum.de). My specialization was in Robotics and Automation. During my studies, I worked on various machine learning projects spanning diverse fields such as robotics, signal processing, communications and neuroscience.
 <!-- robotics at the [Institute for Cognitive Systems](https://www.ce.cit.tum.de/ics/home/) with [Prof. Pablo Lanillos](https://scholar.google.com/citations?user=SUdmeIgAAAAJ&hl=en), signal processing with [Prof. Wolfgang Utschick](https://scholar.google.de/citations?user=qflRi8QAAAAJ&hl=de), communications at Intel and computational neuroscience at [mackelab](https://www.mackelab.org) with [Prof. Jakob Macke](https://scholar.google.com/citations?user=FKOqtF8AAAAJ). -->
