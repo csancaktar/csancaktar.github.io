@@ -1,0 +1,502 @@
+<!DOCTYPE HTML>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Cansu Sancaktar</title>
+  
+  <meta name="author" content="Cansu Sancaktar">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="stylesheet.css?v=6">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👾</text></svg>">
+  <!-- <link rel="icon" type="image/png" href="images/seal_icon.png"> -->
+</head>
+
+<script type="text/javascript">
+function toggle_vis(id) {
+    var e = document.getElementById(id);
+    if (e.style.display == 'none')
+    e.style.display = 'inline';
+    else
+    e.style.display = 'none';
+}
+</script>
+
+<!-- --- Side thumbnails + connectors + Lightbox (place before </body>) --- -->
+<div id="side-docks" aria-hidden="true"></div>
+<svg id="side-lines" aria-hidden="true"></svg>
+
+<!-- Zoom lightbox -->
+<div id="media-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+  <button class="lb-close" aria-label="Close">×</button>
+  <div class="lb-content"></div>
+</div>
+
+<script>
+/* Side thumbnails with alternating sides (runs after DOM is ready) */
+window.addEventListener('load', function() {
+  const docksRoot = document.getElementById('side-docks');
+  const svg = document.getElementById('side-lines');
+
+  const MAP = new Map();
+  const isDesktop = () => window.matchMedia('(min-width: 901px)').matches;
+  const toEmbed = (u) => u
+    ? u.includes('watch?v=') ? u.replace('watch?v=','embed/')
+      : u.includes('youtu.be/') ? u.replace('youtu.be/','www.youtube.com/embed/')
+      : u
+    : '';
+
+  function ensureNodes() {
+    if (!isDesktop()) { destroyAll(); return; }
+    const featured = Array.from(document.querySelectorAll('.pub-item.featured[data-video]'));
+
+    // remove missing
+    for (const [el, rec] of MAP.entries()) {
+      if (!featured.includes(el)) {
+        rec.dockEl.remove();
+        rec.pathEl.remove();
+        MAP.delete(el);
+      }
+    }
+    // create new
+    featured.forEach(el => {
+      if (MAP.has(el)) return;
+      const url = el.getAttribute('data-video');
+      const dock = document.createElement('div');
+      dock.className = 'side-dock';
+
+      if (/\.mp4(\?|#|$)/i.test(url)) {
+        dock.innerHTML = `<video autoplay muted loop playsinline>
+                            <source src="${url}" type="video/mp4">
+                          </video>`;
+      } else if (/\.(gif|webp)(\?|#|$)/i.test(url)) {
+        const img = new Image();
+        img.alt = "demo";
+        img.className = "dock-img";
+        img.src = url.startsWith("/") || url.startsWith("http") ? url : ("./" + url.replace(/^\.?\//, ""));
+        dock.appendChild(img);
+      } else {
+        dock.innerHTML = `<iframe src="${toEmbed(url)}" allow="autoplay; fullscreen"></iframe>`;
+      }
+      dock.dataset.src = url;             // used by lightbox
+      docksRoot.appendChild(dock);
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('fill','none');
+      path.setAttribute('stroke','var(--swish-line)');
+      path.setAttribute('stroke-linecap','round');
+      path.setAttribute('vector-effect','non-scaling-stroke');
+      path.setAttribute('stroke-dasharray','5 7');
+      path.setAttribute('stroke-width','2.5');
+      svg.appendChild(path);
+
+      MAP.set(el, { dockEl: dock, pathEl: path });
+    });
+  }
+
+  function positionOnly() {
+    if (!isDesktop()) return;
+
+    // layout constants (same as your tuned values)
+    const DOCK_W    = 300;
+    const DOCK_H    = 168;
+    const GAP       = 16;
+    const OFFSET_X  = 70;
+    const OFFSET_Y  = -48;
+
+    // size SVG
+    const de = document.documentElement;
+    const W = Math.max(de.scrollWidth, de.clientWidth);
+    const H = Math.max(de.scrollHeight, de.clientHeight);
+    svg.setAttribute('width', W);
+    svg.setAttribute('height', H);
+    svg.style.cssText = `position:absolute;left:0;top:0;width:${W}px;height:${H}px;`;
+
+    // anchors
+    const main = document.querySelector('body > table') || document.body;
+    const rectMain = main.getBoundingClientRect();
+    const xRight = Math.round(rectMain.right + window.scrollX + OFFSET_X);
+    const xLeft  = Math.round(rectMain.left  + window.scrollX - OFFSET_X - DOCK_W);
+
+    // items sorted by Y
+    const items = [...MAP.keys()].map(el => {
+      const r = el.getBoundingClientRect();
+      return { el, centerY: r.top + window.scrollY + r.height/2 };
+    }).sort((a,b)=>a.centerY - b.centerY);
+
+    // stack + alternate sides
+    let lastBottom = -Infinity;
+    items.forEach((item, i) => {
+      const rec = MAP.get(item.el);
+      if (!rec) return;
+
+      let topY = Math.round(item.centerY - DOCK_H/2 + OFFSET_Y);
+      if (topY < lastBottom + GAP) topY = lastBottom + GAP;
+      lastBottom = topY + DOCK_H;
+
+      const side = (i % 2 === 0) ? 'right' : 'left';
+      rec.dockEl.classList.remove('left','right');
+      rec.dockEl.classList.add(side);
+      const leftX = (side === 'right') ? xRight : xLeft;
+
+      rec.dockEl.style.position = 'absolute';
+      rec.dockEl.style.left     = leftX + 'px';
+      rec.dockEl.style.top      = topY  + 'px';
+      rec.dockEl.style.width    = DOCK_W + 'px';
+      rec.dockEl.style.height   = DOCK_H + 'px';
+
+      const pr = item.el.getBoundingClientRect();
+      const sy = Math.round(pr.top + window.scrollY + pr.height/2);
+      let d;
+      if (side === 'right') {
+        const sx = Math.round(pr.right + window.scrollX);
+        const ex = leftX;
+        const ey = Math.round(topY + DOCK_H/2);
+        const dx = Math.max(ex - sx, 60);
+        const c  = Math.max(dx * 0.6, 60);
+        d = `M ${sx},${sy} C ${sx + c},${sy} ${ex - c},${ey} ${ex},${ey}`;
+      } else {
+        const sx = Math.round(pr.left + window.scrollX);
+        const ex = leftX + DOCK_W;
+        const ey = Math.round(topY + DOCK_H/2);
+        const dx = Math.max(sx - ex, 60);
+        const c  = Math.max(dx * 0.6, 60);
+        d = `M ${sx},${sy} C ${sx - c},${sy} ${ex + c},${ey} ${ex},${ey}`;
+      }
+      rec.pathEl.setAttribute('d', d);
+    });
+  }
+
+  function destroyAll() {
+    for (const {dockEl, pathEl} of MAP.values()) { dockEl.remove(); pathEl.remove(); }
+    MAP.clear();
+    docksRoot.innerHTML = '';
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+  }
+
+  // schedule updates
+  let raf = 0;
+  function requestPos() {
+    if (raf) return;
+    raf = requestAnimationFrame(() => { raf = 0; ensureNodes(); positionOnly(); });
+  }
+
+  requestPos();
+  window.addEventListener('resize', requestPos);
+  window.addEventListener('scroll', requestPos, {passive:true});
+});
+</script>
+
+<script>
+/* Conflict-free lightbox (runs after DOM is ready) */
+window.addEventListener('load', function () {
+  const lightbox   = document.getElementById('media-lightbox');
+  const lbContent  = lightbox.querySelector('.lb-content');
+  const lbCloseBtn = lightbox.querySelector('.lb-close');
+
+  function isMp4(u){ return /\.mp4(\?|#|$)/i.test(u); }
+  function isGifOrWebp(u){ return /\.(gif|webp)(\?|#|$)/i.test(u); }
+  function toEmbed(u){
+    if (!u) return '';
+    if (u.includes('watch?v=')) return u.replace('watch?v=','embed/');
+    if (u.includes('youtu.be/')) return u.replace('youtu.be/','www.youtube.com/embed/');
+    return u;
+  }
+
+  function openLB(url){
+    if (isMp4(url)) {
+      lbContent.innerHTML = `<video autoplay controls playsinline>
+                               <source src="${url}" type="video/mp4">
+                             </video>`;
+    } else if (isGifOrWebp(url)) {
+      lbContent.innerHTML = `<img src="${url}" alt="preview">`;
+    } else {
+      lbContent.innerHTML = `<iframe src="${toEmbed(url)}" allow="autoplay; fullscreen"></iframe>`;
+    }
+    document.body.classList.add('lb-open');
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden','false');
+  }
+
+  function closeLB(){
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden','true');
+    document.body.classList.remove('lb-open');
+    lbContent.innerHTML = '';
+  }
+
+  document.getElementById('side-docks').addEventListener('click', (e)=>{
+    const dock = e.target.closest('.side-dock');
+    if (!dock) return;
+    const src = dock.dataset.src;
+    if (src) openLB(src);
+  }, true);
+
+  lightbox.querySelector('.lb-close').addEventListener('click', closeLB);
+  lightbox.addEventListener('click', (e)=>{ if (e.target === lightbox) closeLB(); });
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeLB(); });
+});
+</script>
+<!-- --- /end block --- -->
+
+
+<body>
+  <table style="width:100%;max-width:900px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+    <tr style="padding:0px">
+      <td style="padding:0px">
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+          <tr style="padding:0px">
+            <td style="padding:2.5%;width:73%;vertical-align:middle">
+              <p style="text-align:center">
+                <!-- <name>Cansu Sancaktar</name> -->
+                <name class="name">Cansu Sancaktar</name>
+              </p>
+              <p>
+                <!-- I am a PhD student working on intrinsically-motivated reinforcement learning (RL) and open-endedness. My goal is to understand how an agent can efficiently and meaningfully explore its environment to facilitate open-ended learning. similar to children's curious play, without a pre-defined set of fixed tasks.  -->
+                I’m a PhD student working on intrinsically motivated RL and open-endedness, advised by <a href="https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/distributed-intelligence/team/prof-dr-georg-martius/">Georg Martius</a>. My work focuses on building agents that decide what’s worth learning and explore their environment efficiently and autonomously, much like children at play.
+                <br><br>
+                <b>I'm excited about the continual acquisition of novel skills with minimal external supervision, progressing toward scalable, self-improving systems.</b>
+              </p>
+              <p>
+                You can reach out to me at: firstname [dot] lastname [at] gmail [dot] com.
+              </p>
+              
+              <p style="text-align:center">
+<!--                <a href="mailto:">Email</a> &nbsp/&nbsp-->
+                <a href="data/cansu_sancaktar_oct25.pdf">CV</a> &nbsp/&nbsp
+<!--                <a href="data/JonBarron-bio.txt">Bio</a> &nbsp/&nbsp-->
+               <a href="https://scholar.google.com/citations?hl=en&user=9JqNY7UAAAAJ&view_op=list_works&sortby=pubdate">Google Scholar</a> &nbsp/&nbsp
+                <a href="https://x.com/CcansuSancaktar">Twitter</a> &nbsp/&nbsp
+                <a href="https://github.com/cansu97">Github</a>
+              </p>
+            </td>
+            <td style="padding:2.5%;width:30%;max-width:30%">
+              <a href="images/cansu_pic_circle.png"><img style="width:100%;max-width:100%" alt="profile photo" src="images/cansu_pic_circle.png" class="hoverZoomLink"></a>
+            </td>
+          </tr>
+        </tbody></table>
+
+        <div class="Character">
+   
+          <img class="Character_shadow pixelart" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" alt="Shadow" />
+          
+          <img class="Character_spritesheet pixelart face-down" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacter.png" alt="Character" />
+          
+          
+        </div>
+
+        <br>
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tbody><tr><td>
+                <!-- <heading>News</heading> -->
+                <name class="heading_pixel">News</name>
+                <ul>
+                    <li>05/2025 - Our paper "SENSEI: Semantic Exploration Guided by Foundation Models to Learn Versatile World Models" has been accepted to ICML 2025!</li>
+                    <li>04/2025 - Started my research internship at the CodeGen team at FAIR Meta Paris, advised by Taco Cohen.</li>
+                    <li>07/2024 - <a href="https://imol-workshop.github.io">IMOL Workshop</a> has been accepted to NeurIPS 2024 in Vancouver!</li>
+                    <li>06/2024 - Moving to Amsterdam for my internship at Qualcomm in the Embodied AI Team 🤖 </li>
+                    <a href="javascript:toggle_vis('news')">show more</a>
+                    <div id="news" style="display:none">
+
+                    <li>09/2023 - Our paper "Regularity as Intrinsic Reward" has been accepted to NeurIPS 2023!</li>
+                    <li>07/2023 - <a href="https://imol-workshop.github.io/site_2023/index.html">IMOL Workshop</a> has been accepted to NeurIPS 2023 in New Orleans 🎷 </li>
+                    </div>
+                </ul>
+            </td></tr></tbody>
+        </table>
+
+
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tbody><tr><td>
+                <!-- <heading>Publications & Preprints</heading> <br><br> -->
+                <name class="heading_pixel">Publications & Preprints</name> <br><br>
+                <!-- <heading2><i>2025</i></heading2><br><br> -->
+
+                <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                <!-- <div class="pub-item featured" data-video="media/hyt_main.gif"> -->
+                  <a href="https://arxiv.org/abs/2510.00600"><papertitle>Hybrid Training for Vision-Language-Action Models</papertitle></a>
+                    <br>Pietro Mazzaglia, <b>Cansu Sancaktar</b>, Markus Peschl, Daniel Dijkman</br>
+                    3rd CoRL Workshop on Learning Effective Abstractions for Planning, 2025<br>
+                    <a href="https://arxiv.org/abs/2510.00600">paper</a>
+                </div>
+                <div id="dvd" style="display:none">
+                </div>
+
+                <div class="pub-item featured" data-video="media/sensei_promo_small.gif">
+                    <a href="https://arxiv.org/abs/2503.01584"><papertitle>SENSEI: Semantic Exploration Guided by Foundation Models to Learn Versatile World Models</papertitle></a>
+                    <br><b>Cansu Sancaktar*</b>, Christian Gumbsch*, Andrii Zadaianchuk, Pavel Kolev, Georg Martius</br>
+                    ICML 2025<br>
+                    <a href="https://arxiv.org/abs/2503.01584">paper</a> / <a href="https://sites.google.com/view/sensei-paper">website</a>
+                </div>
+
+                <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                    <a href="https://arxiv.org/abs/2509.05735"><papertitle>Offline vs. Online Learning in Model-based RL: Lessons for Data Collection Strategies</papertitle></a>
+                    <br>Jiaqi Chen, Ji Shi, <b>Cansu Sancaktar</b>, Jonas Frey, Georg Martius</br>
+                    Reinforcement Learning Conference (RLC) 2025<br>
+                    <a href="https://arxiv.org/abs/2509.05735">paper</a>
+                </div>
+                <div id="dvd" style="display:none">
+                </div><br>
+
+                <!-- <heading2><i>2024</i></heading2><br><br> -->
+
+                <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                    <a href="https://openreview.net/forum?id=vBJZ93tvoE&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2024%2FConference%2FAuthors%23your-submissions)"><papertitle>Modelling Microbial Communities with Graph Neural Networks</papertitle></a>
+                    <br>Albane Ruaud, <b>Cansu Sancaktar</b>, Marco Bagatella, Christoph Ratzke, Georg Martius</br>
+                    ICML 2024<br>
+                    <a href="https://openreview.net/forum?id=vBJZ93tvoE&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2024%2FConference%2FAuthors%23your-submissions)">paper</a>
+                    / <a href="https://sites.google.com/view/microbegnn">website</a>
+                </div>
+                <div id="dvd" style="display:none">
+                </div>
+
+                <!-- <heading2><i>2023</i></heading2><br><br> -->
+
+                <div class="pub-item featured" data-video="media/grid_rair_videos.gif">
+                    <a href="https://arxiv.org/abs/2312.01473"><papertitle>Regularity as Intrinsic Reward for Free Play</papertitle></a>
+                    <br><b>Cansu Sancaktar</b>, Justus Piater, Georg Martius</br>
+                    NeurIPS 2023<br>
+                    <a href="https://arxiv.org/abs/2312.01473">paper</a> / <a href="https://sites.google.com/view/rair-project">website</a>
+                    / <a href="https://github.com/martius-lab/rair-mbrl">code</a>
+                </div>
+                <div id="dvd" style="display:none">
+                </div>
+
+                <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                    <a href="https://arxiv.org/abs/2306.12371"><papertitle>Optimistic Active Exploration of Dynamical Systems</papertitle></a>
+                    <br>Bhavya Sukhija, Lenart Treven, <b>Cansu Sancaktar</b>, Sebastian Blaes, Stelian Coros, Andreas Krause</br>
+                    NeurIPS 2023<br>
+                    <a href="https://arxiv.org/abs/2306.12371">paper</a>
+                    / <a href="https://github.com/lasgroup/opax">code</a>
+                </div>
+                <div id="dvd" style="display:none">
+                </div>
+                
+                <!-- <heading2><i>2022</i></heading2><br><br> -->
+
+                <div class="pub-item featured" data-video="media/cee_us_summary.gif">
+                    <a href="https://openreview.net/forum?id=NnuYZ1el24C"><papertitle>Curious Exploration via Structured World Models Yields Zero-Shot Object Manipulation</papertitle></a>
+                    <br><b>Cansu Sancaktar</b>, Sebastian Blaes, Georg Martius</br>
+                    NeurIPS 2022<br>
+                    Best poster award at the IEEE RAS Technical Committee on Model-Based Optimization for Robotics poster event 2022.<br>
+                    <a href="https://openreview.net/forum?id=NnuYZ1el24C">paper</a> / <a href="https://martius-lab.github.io/cee-us/">website</a>
+                    / <a href="https://github.com/martius-lab/cee-us">code</a>
+                </div>
+                <div id="dvd" style="display:none">
+                </div>
+
+                <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                    <a href="https://proceedings.mlr.press/v220/gurtler23a.html"><papertitle>Real Robot Challenge 2022: Learning Dexterous Manipulation from Offline Data in the Real World</papertitle></a>
+                    <!-- <br>Nico Gürtler, Felix Widmaier, <b>Cansu Sancaktar</b>, ... and Georg Martius</br> -->
+                    <br><span class="authors">
+                    Nico Gürtler, Felix Widmaier, <b>Cansu Sancaktar</b>, <span id="rcc-ellipsis"></span>
+                    <span id="rcc-more" style="display:none">Sebastian Blaes, Pavel Kolev, Stefan Bauer, Manuel Wüthrich, Markus Wulfmeier, Martin Riedmiller, Arthur Allshire, Qiang Wang, Robert McCarthy, Hangyeol Kim, Jongchan Baek, Wookyong Kwon, Shanliang Qian, Yasunori Toshimitsu, Mike Yan Michelis, Amirhossein Kazemipour, Arman Raayatsanati, Hehui Zheng, Barnabas Gavin Cangan, Bernhard Schölkopf</span>
+                    <a href="#" id="rcc-toggle" onclick="
+                      const more = document.getElementById('rcc-more');
+                      const dots = document.getElementById('rcc-ellipsis');
+                      const t = document.getElementById('rcc-toggle');
+                      const open = more.style.display !== 'none';
+                      more.style.display = open ? 'none' : 'inline';
+                      dots.style.display = open ? 'inline' : 'none';
+                      t.textContent = open ? 'show all authors' : '[show less]';
+                      return false;
+                    ">... [show all authors]</a>
+                  </span>, Georg Martius<br>
+                    NeurIPS 2022 Competition Track<br>
+                    <a href="https://proceedings.mlr.press/v220/gurtler23a.html">paper</a>
+                </div>
+                <div id="dvd" style="display:none">
+                </div><br>
+
+                <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                    <a href="https://ieeexplore.ieee.org/document/9278105"><papertitle>End-to-End Pixel-Based Deep Active Inference for Body Perception and Action</papertitle></a>
+                    <br><b>Cansu Sancaktar</b>, Marcel A. J. Gerven, Pablo Lanillos</br>
+                    2020 Joint IEEE 10th International Conference on Development and Learning and Epigenetic Robotics (ICDL-EpiRob)<br>
+                    <a href="https://ieeexplore.ieee.org/document/9278105">paper</a>
+                    / <a href="https://www.youtube.com/watch?v=kAAZ8_yk25Q">video</a>
+                    / <a href="https://github.com/cansu97/PixelAI">code</a>
+                </div>
+                <div id="dvd" style="display:none">
+                </div><br>
+                
+            <!--     <a href="javascript:toggle_vis('publications')">show more</a>
+                <div id="publications" style="display:none"></div> -->
+            </td></tr></tbody>
+        </table>
+
+
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tbody><tr><td>
+                <!-- <heading>Talks</heading> <br><br> -->
+                <name class="heading_pixel">Talks</name>
+                <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                    <br>11/2023 — <i>Playful Exploration in Reinforcement Learning</i>, <a href="https://www.benerl.org/seminar-series/schedule"><papertitle>BeNeRL Seminar Series</papertitle></a>.
+                    <!-- <br>11/2023 - <a href="https://www.benerl.org/seminar-series/schedule"><papertitle>Talk at the BeNeRL Seminar Series: <i>Playful Exploration in Reinforcement Learning</i></papertitle></a>. -->
+                </div>
+                <div id="dvd" style="display:none">
+                </div>
+
+                <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                    <br>11/2023 - <a href="https://hmc-lab.com/"><papertitle>Invited talk at the Human and Machine Cognition Lab (PI: Charley Wu) at the University of Tübingen</papertitle></a>.
+                </div>
+                <div id="dvd" style="display:none">
+                </div>
+
+                <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                    <br>03/2023 - <a href="https://hcai-munich.com/eric.html"><papertitle>Invited Talk at the Computational Principles of Intelligence Lab (PI: Eric Schulz) at the Max Planck Institute for Biological Cybernetics</papertitle></a>.
+                </div>
+                <div id="dvd" style="display:none">
+                </div>
+
+                <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                    <br>01/2023 - <a href="https://imprs.is.mpg.de/"><papertitle>Scientific talk at the 2023 IMPRS-IS Interview Symposium</papertitle></a>.
+                </div>
+                <div id="dvd" style="display:none">
+                </div>
+
+                <!-- <div onmouseover="document.getElementById('dvd').style.display = 'block';"
+                    onmouseout="document.getElementById('dvd').style.display='none';">
+                    <b><papertitle>Optimistic Planning by Regularized Dynamic Programming</papertitle></b>
+                    <br>07/2023 - <i>Stanford University</i>. Stanford, CA.
+                    <br>08/2023 - <i>Princeton University</i>. Princeton, NJ.</br>
+                </div>
+                <div id="dvd" style="display:none">
+                </div><br> -->
+                
+            <!--     <a href="javascript:toggle_vis('publications')">show more</a>
+                <div id="publications" style="display:none"></div> -->
+            </td></tr></tbody>
+        </table>
+
+
+            </tbody></table>
+    
+
+
+        </tbody></table>
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+          <tr>
+            <td style="padding:0px">
+              <br>
+              <p style="text-align:right;font-size:small;">
+                Thanks <a href="https://github.com/jonbarron/website">Jon Barron</a>
+                for this nice template.
+              </p>
+            </td>
+          </tr>
+        </tbody></table>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>
