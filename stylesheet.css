@@ -406,7 +406,7 @@ html, body {
 
 @media (max-width: 650px) {
   .Character {
-    top: 260px !important;        /* nudge down a little */
+    top: 270px !important;        /* nudge down a little */
     transform: translateX(-50%) scale(0.9); /* tiny shrink to fit */
   }
 }
