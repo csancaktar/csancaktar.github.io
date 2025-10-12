@@ -404,9 +404,68 @@ html, body {
 } */
 
 
-@media (max-width: 650px) {
-  .Character {
-    top: 270px !important;        /* nudge down a little */
-    transform: translateX(-50%) scale(0.9); /* tiny shrink to fit */
+@media screen and (max-width: 650px) {
+  body .Character {
+    position: absolute !important;     /* keep it anchored to viewport */
+    top: 260px !important;          /* your requested offset */
+    left: 45% !important;
+    transform: translateX(-45%) !important;
+    display: block !important;      /* in case any earlier rule hid it */
+    z-index: 100000 !important;
+  }
+}
+
+@media screen and (max-width: 495px) {
+  body .Character {
+    position: absolute !important;     /* keep it anchored to viewport */
+    top: 300px !important;          /* your requested offset */
+    left: 45% !important;
+    transform: translateX(-45%) !important;
+    display: block !important;      /* in case any earlier rule hid it */
+    z-index: 100000 !important;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  body .Character {
+    position: absolute !important;     /* keep it anchored to viewport */
+    top: 318px !important;          /* your requested offset */
+    left: 45% !important;
+    transform: translateX(-45%) !important;
+    display: block !important;      /* in case any earlier rule hid it */
+    z-index: 100000 !important;
+  }
+}
+
+@media screen and (max-width: 363px) {
+  body .Character {
+    position: absolute !important;     /* keep it anchored to viewport */
+    top: 360px !important;          /* your requested offset */
+    left: 45% !important;
+    transform: translateX(-45%) !important;
+    display: block !important;      /* in case any earlier rule hid it */
+    z-index: 100000 !important;
+  }
+}
+
+@media screen and (max-width: 352px) {
+  body .Character {
+    position: absolute !important;     /* keep it anchored to viewport */
+    top: 398px !important;          /* your requested offset */
+    left: 45% !important;
+    transform: translateX(-45%) !important;
+    display: block !important;      /* in case any earlier rule hid it */
+    z-index: 100000 !important;
+  }
+}
+
+@media screen and (max-width: 338px) {
+  body .Character {
+    position: absolute !important;     /* keep it anchored to viewport */
+    top: 425px !important;          /* your requested offset */
+    left: 45% !important;
+    transform: translateX(-45%) !important;
+    display: block !important;      /* in case any earlier rule hid it */
+    z-index: 100000 !important;
   }
 }
