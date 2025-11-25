@@ -117,6 +117,24 @@ window.addEventListener('load', function() {
     const rectMain = main.getBoundingClientRect();
     const xRight = Math.round(rectMain.right + window.scrollX + OFFSET_X);
     const xLeft  = Math.round(rectMain.left  + window.scrollX - OFFSET_X - DOCK_W);
+    const viewportMin = window.scrollX + 16;
+    const viewportMax = window.scrollX + window.innerWidth - 16;
+    const MIN_DOCK_W = 180;
+    const availableRight = viewportMax - xRight;
+    const availableLeft = (xLeft + DOCK_W) - viewportMin;
+    const hasRightRoom = availableRight >= MIN_DOCK_W;
+    const hasLeftRoom = availableLeft >= MIN_DOCK_W;
+    const dockWidthRight = hasRightRoom ? Math.min(DOCK_W, availableRight) : 0;
+    const dockWidthLeft = hasLeftRoom ? Math.min(DOCK_W, availableLeft) : 0;
+
+    if (!hasLeftRoom && !hasRightRoom) {
+      docksRoot.style.display = 'none';
+      svg.style.display = 'none';
+      return;
+    } else {
+      docksRoot.style.display = '';
+      svg.style.display = '';
+    }
 
     // items sorted by Y
     const items = [...MAP.keys()].map(el => {
@@ -126,6 +144,8 @@ window.addEventListener('load', function() {
 
     // stack + alternate sides
     let lastBottom = -Infinity;
+    const useBothSides = hasLeftRoom && hasRightRoom;
+    const singleSide = hasRightRoom ? 'right' : 'left';
     items.forEach((item, i) => {
       const rec = MAP.get(item.el);
       if (!rec) return;
@@ -134,15 +154,18 @@ window.addEventListener('load', function() {
       if (topY < lastBottom + GAP) topY = lastBottom + GAP;
       lastBottom = topY + DOCK_H;
 
-      const side = (i % 2 === 0) ? 'right' : 'left';
+      const side = useBothSides ? ((i % 2 === 0) ? 'right' : 'left') : singleSide;
+      const dockWidth = (side === 'right') ? dockWidthRight : dockWidthLeft;
       rec.dockEl.classList.remove('left','right');
       rec.dockEl.classList.add(side);
-      const leftX = (side === 'right') ? xRight : xLeft;
+      const leftX = (side === 'right')
+        ? Math.max(viewportMin, Math.min(xRight, viewportMax - dockWidth))
+        : Math.max(xLeft, viewportMin);
 
       rec.dockEl.style.position = 'absolute';
       rec.dockEl.style.left     = leftX + 'px';
       rec.dockEl.style.top      = topY  + 'px';
-      rec.dockEl.style.width    = DOCK_W + 'px';
+      rec.dockEl.style.width    = dockWidth + 'px';
       rec.dockEl.style.height   = DOCK_H + 'px';
 
       const pr = item.el.getBoundingClientRect();
@@ -157,7 +180,7 @@ window.addEventListener('load', function() {
         d = `M ${sx},${sy} C ${sx + c},${sy} ${ex - c},${ey} ${ex},${ey}`;
       } else {
         const sx = Math.round(pr.left + window.scrollX);
-        const ex = leftX + DOCK_W;
+        const ex = leftX + dockWidth;
         const ey = Math.round(topY + DOCK_H/2);
         const dx = Math.max(sx - ex, 60);
         const c  = Math.max(dx * 0.6, 60);
@@ -237,6 +260,33 @@ window.addEventListener('load', function () {
   document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeLB(); });
 });
 </script>
+<script>
+/* Keep pixel avatar vertically aligned with hero block height */
+window.addEventListener('load', function () {
+  const hero = document.querySelector('.hero-block');
+  const character = hero ? hero.querySelector('.Character') : null;
+  if (!hero || !character) return;
+
+  const ratio = 0.75;                  /* tweak to taste */
+  const MIN_TOP = 170;
+  const MAX_TOP = 360;
+
+  function updateCharacterOffset() {
+    if (window.matchMedia('(max-width: 820px)').matches) {
+      hero.style.removeProperty('--character-top');
+      return;
+    }
+    const base = hero.querySelector('table') || hero;
+    const rect = base.getBoundingClientRect();
+    const desired = rect.height * ratio;
+    const clamped = Math.max(MIN_TOP, Math.min(MAX_TOP, desired));
+    hero.style.setProperty('--character-top', clamped + 'px');
+  }
+
+  updateCharacterOffset();
+  window.addEventListener('resize', updateCharacterOffset);
+});
+</script>
 <!-- --- /end block --- -->
 
 
@@ -244,6 +294,7 @@ window.addEventListener('load', function () {
   <table style="width:100%;max-width:900px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
     <tr style="padding:0px">
       <td style="padding:0px">
+        <div class="hero-block">
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
           <tr style="padding:0px">
             <td style="padding:2.5%;width:73%;vertical-align:middle">
@@ -282,7 +333,8 @@ window.addEventListener('load', function () {
           
           <img class="Character_spritesheet pixelart face-down" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacter.png" alt="Character" />
           
-          
+        
+        </div>
         </div>
 
         <br>

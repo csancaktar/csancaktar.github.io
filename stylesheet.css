@@ -184,25 +184,21 @@ span.highlight {
    --pixel-size: 4;
 }
 
-/* .Character {
-   width: calc(32px * var(--pixel-size));
-   height: calc(32px * var(--pixel-size));
-   overflow: hidden;
-   position: relative;
-   margin: 4em auto;
-} */
-
+.hero-block {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
 
 .Character {
   width: calc(30px * var(--pixel-size));
   height: calc(30px * var(--pixel-size));
   overflow: hidden;
-
-  position: absolute;          
-  left: 45%;                
-  transform: translateX(-45%);
-  top: 210px;               
-
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: var(--character-top, 220px);
   z-index: 100000;
   pointer-events: none;
 }
@@ -397,75 +393,39 @@ body.lb-open { overflow: hidden; }
 
 html, body {
   background-color: rgb(255, 255, 255); /* subtle sea tint */
+  overflow-x: hidden; /* avoid accidental sideways scroll from floating docks */
 }
 
-/* @media (max-width: 700px) {
-  .Character { display: none !important; }
-} */
-
+@media screen and (max-width: 820px) {
+  .Character {
+    position: absolute;
+    top: 240px;
+    left: 45%;
+    transform: translateX(-45%);
+    margin: 0;
+  }
+}
 
 @media screen and (max-width: 650px) {
-  body .Character {
-    position: absolute !important;     /* keep it anchored to viewport */
-    top: 260px !important;          /* your requested offset */
-    left: 45% !important;
-    transform: translateX(-45%) !important;
-    display: block !important;      /* in case any earlier rule hid it */
-    z-index: 100000 !important;
-  }
+  .Character { top: 260px; }
 }
 
 @media screen and (max-width: 495px) {
-  body .Character {
-    position: absolute !important;     /* keep it anchored to viewport */
-    top: 300px !important;          /* your requested offset */
-    left: 45% !important;
-    transform: translateX(-45%) !important;
-    display: block !important;      /* in case any earlier rule hid it */
-    z-index: 100000 !important;
-  }
+  .Character { top: 300px; }
 }
 
 @media screen and (max-width: 400px) {
-  body .Character {
-    position: absolute !important;     /* keep it anchored to viewport */
-    top: 318px !important;          /* your requested offset */
-    left: 45% !important;
-    transform: translateX(-45%) !important;
-    display: block !important;      /* in case any earlier rule hid it */
-    z-index: 100000 !important;
-  }
+  .Character { top: 318px; }
 }
 
 @media screen and (max-width: 363px) {
-  body .Character {
-    position: absolute !important;     /* keep it anchored to viewport */
-    top: 360px !important;          /* your requested offset */
-    left: 45% !important;
-    transform: translateX(-45%) !important;
-    display: block !important;      /* in case any earlier rule hid it */
-    z-index: 100000 !important;
-  }
+  .Character { top: 360px; }
 }
 
 @media screen and (max-width: 352px) {
-  body .Character {
-    position: absolute !important;     /* keep it anchored to viewport */
-    top: 398px !important;          /* your requested offset */
-    left: 45% !important;
-    transform: translateX(-45%) !important;
-    display: block !important;      /* in case any earlier rule hid it */
-    z-index: 100000 !important;
-  }
+  .Character { top: 398px; }
 }
 
 @media screen and (max-width: 338px) {
-  body .Character {
-    position: absolute !important;     /* keep it anchored to viewport */
-    top: 425px !important;          /* your requested offset */
-    left: 45% !important;
-    transform: translateX(-45%) !important;
-    display: block !important;      /* in case any earlier rule hid it */
-    z-index: 100000 !important;
-  }
+  .Character { top: 425px; }
 }
