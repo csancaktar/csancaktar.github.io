@@ -69,7 +69,7 @@ window.addEventListener('load', function() {
         dock.innerHTML = `<video autoplay muted loop playsinline>
                             <source src="${url}" type="video/mp4">
                           </video>`;
-      } else if (/\.(gif|webp)(\?|#|$)/i.test(url)) {
+      } else if (/\.(gif|webp|png|jpe?g)(\?|#|$)/i.test(url)) {
         const img = new Image();
         img.alt = "demo";
         img.className = "dock-img";
@@ -150,9 +150,11 @@ window.addEventListener('load', function() {
       const rec = MAP.get(item.el);
       if (!rec) return;
 
-      let topY = Math.round(item.centerY - DOCK_H/2 + OFFSET_Y);
+      const itemH = parseInt(item.el.getAttribute('data-dock-height')) || DOCK_H;
+
+      let topY = Math.round(item.centerY - itemH/2 + OFFSET_Y);
       if (topY < lastBottom + GAP) topY = lastBottom + GAP;
-      lastBottom = topY + DOCK_H;
+      lastBottom = topY + itemH;
 
       const side = useBothSides ? ((i % 2 === 0) ? 'right' : 'left') : singleSide;
       const dockWidth = (side === 'right') ? dockWidthRight : dockWidthLeft;
@@ -166,7 +168,7 @@ window.addEventListener('load', function() {
       rec.dockEl.style.left     = leftX + 'px';
       rec.dockEl.style.top      = topY  + 'px';
       rec.dockEl.style.width    = dockWidth + 'px';
-      rec.dockEl.style.height   = DOCK_H + 'px';
+      rec.dockEl.style.height   = itemH + 'px';
 
       const pr = item.el.getBoundingClientRect();
       const sy = Math.round(pr.top + window.scrollY + pr.height/2);
@@ -174,14 +176,14 @@ window.addEventListener('load', function() {
       if (side === 'right') {
         const sx = Math.round(pr.right + window.scrollX);
         const ex = leftX;
-        const ey = Math.round(topY + DOCK_H/2);
+        const ey = Math.round(topY + itemH/2);
         const dx = Math.max(ex - sx, 60);
         const c  = Math.max(dx * 0.6, 60);
         d = `M ${sx},${sy} C ${sx + c},${sy} ${ex - c},${ey} ${ex},${ey}`;
       } else {
         const sx = Math.round(pr.left + window.scrollX);
         const ex = leftX + dockWidth;
-        const ey = Math.round(topY + DOCK_H/2);
+        const ey = Math.round(topY + itemH/2);
         const dx = Math.max(sx - ex, 60);
         const c  = Math.max(dx * 0.6, 60);
         d = `M ${sx},${sy} C ${sx - c},${sy} ${ex + c},${ey} ${ex},${ey}`;
@@ -218,7 +220,7 @@ window.addEventListener('load', function () {
   const lbCloseBtn = lightbox.querySelector('.lb-close');
 
   function isMp4(u){ return /\.mp4(\?|#|$)/i.test(u); }
-  function isGifOrWebp(u){ return /\.(gif|webp)(\?|#|$)/i.test(u); }
+  function isGifOrWebp(u){ return /\.(gif|webp|png|jpe?g)(\?|#|$)/i.test(u); }
   function toEmbed(u){
     if (!u) return '';
     if (u.includes('watch?v=')) return u.replace('watch?v=','embed/');
@@ -314,7 +316,7 @@ window.addEventListener('load', function () {
               
               <p style="text-align:center">
 <!--                <a href="mailto:">Email</a> &nbsp/&nbsp-->
-                <a href="data/cansu_sancaktar_nov25.pdf">CV</a> &nbsp/&nbsp
+                <a href="data/cansu_sancaktar_mar26.pdf">CV</a> &nbsp/&nbsp
 <!--                <a href="data/JonBarron-bio.txt">Bio</a> &nbsp/&nbsp-->
                <a href="https://scholar.google.com/citations?hl=en&user=9JqNY7UAAAAJ&view_op=list_works&sortby=pubdate">Google Scholar</a> &nbsp/&nbsp
                 <a href="https://x.com/CcansuSancaktar">Twitter</a> &nbsp/&nbsp
@@ -343,7 +345,9 @@ window.addEventListener('load', function () {
                 <!-- <heading>News</heading> -->
                 <name class="heading_pixel">News</name>
                 <ul>
-                    <li>05/2025 - Our paper "SENSEI: Semantic Exploration Guided by Foundation Models to Learn Versatile World Models" has been accepted to ICML 2025!</li>
+                  <li>03/2026 - "GASP: Guided Asymmetric Self-Play for Coding LLMs" has been accepted to two ICLR 2026 workshops: Recursive Self-Improvement (RSI) as spotlight and Lifelong Agents!</li>
+                  <li>01/2026 - My internship project at Qualcomm "Hybrid Training for Vision-Language-Action Models" has been accepted to ICLR 2026! </li>
+                  <li>05/2025 - Our paper "SENSEI: Semantic Exploration Guided by Foundation Models to Learn Versatile World Models" has been accepted to ICML 2025!</li>
                     <li>04/2025 - Started my research internship at the CodeGen team at FAIR Meta Paris, advised by Taco Cohen.</li>
                     <li>07/2024 - <a href="https://imol-workshop.github.io">IMOL Workshop</a> has been accepted to NeurIPS 2024 in Vancouver!</li>
                     <li>06/2024 - Moving to Amsterdam for my internship at Qualcomm in the Embodied AI Team 🤖 </li>
@@ -363,13 +367,24 @@ window.addEventListener('load', function () {
                 <!-- <heading>Publications & Preprints</heading> <br><br> -->
                 <name class="heading_pixel">Publications & Preprints</name> <br><br>
                 <!-- <heading2><i>2025</i></heading2><br><br> -->
+                
+                <div class="pub-item featured" data-video="media/gasp_gif.gif">
+                    <a href="https://arxiv.org/abs/2603.15957"><papertitle>GASP: Guided Asymmetric Self-Play for Coding LLMs</papertitle></a>
+                    <br>Swadesh Jana*, <b>Cansu Sancaktar*</b>, Tomáš Daniš, Georg Martius, Antonio Orvieto, Pavel Kolev</br>
+                    ICLR 2026 Workshop on AI with Recursive Self-Improvement (spotlight)<br>
+                    ICLR 2026 Workshop on Lifelong Agents<br>
+                    <a href="https://arxiv.org/abs/2603.15957">paper</a>
+                </div>
+                <div id="dvd" style="display:none">
+                </div>
 
                 <div onmouseover="document.getElementById('dvd').style.display = 'block';"
                     onmouseout="document.getElementById('dvd').style.display='none';">
                 <!-- <div class="pub-item featured" data-video="media/hyt_main.gif"> -->
                   <a href="https://arxiv.org/abs/2510.00600"><papertitle>Hybrid Training for Vision-Language-Action Models</papertitle></a>
                     <br>Pietro Mazzaglia, <b>Cansu Sancaktar</b>, Markus Peschl, Daniel Dijkman</br>
-                    3rd CoRL Workshop on Learning Effective Abstractions for Planning, 2025<br>
+                    <!-- 3rd CoRL Workshop on Learning Effective Abstractions for Planning, 2025<br> -->
+                    ICLR 2026<br>
                     <a href="https://arxiv.org/abs/2510.00600">paper</a>
                 </div>
                 <div id="dvd" style="display:none">
