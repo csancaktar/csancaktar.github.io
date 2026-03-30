@@ -272,6 +272,9 @@ span.highlight {
 .side-dock iframe {
   width: 100%; height: 100%; border: 0; object-fit: cover;
 }
+.side-dock img[src*="deep_dive_pipeline"] {
+  object-fit: contain;
+}
 
 /* connector style */
 #side-lines path {
@@ -333,8 +336,8 @@ span.highlight {
 #media-lightbox .lb-content video,
 #media-lightbox .lb-content iframe,
 #media-lightbox .lb-content img {
-  width: 100%;
-  height: 100%;
+  max-width: 92vw;
+  max-height: 88vh;
   display: block;
   border: 0;
   object-fit: contain;           /* show full media on black */
